@@ -2,7 +2,7 @@
 
 Mainly used to ensure a certain length of time has passed since another event, as it does not use interupts to immidially execute when the timer has elapesed, and they need to be checked manually.
 
-## ```C++ Timer(const unsigned int delay)```
+## Timer(const unsigned int delay)
 The base timer
 ex:
 ```C++
