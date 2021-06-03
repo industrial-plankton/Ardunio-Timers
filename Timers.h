@@ -81,6 +81,59 @@ public:
   {
     this->delay = delay;
   }
+
+  bool Check()
+  {
+    return (millis() - this->start >= this->delay);
+  }
+
+  unsigned long SetPoint()
+  {
+    return delay;
+  }
+
+  unsigned long Remaining()
+  {
+    if (this->Check())
+    {
+      return 0;
+    }
+    return (this->delay - (millis() - this->start));
+  }
+};
+
+// untested
+class SetableLongTimerOneShot : public SetableLongTimer
+{
+protected:
+  bool state = false;
+
+public:
+  SetableLongTimerOneShot(const unsigned long delay) : SetableLongTimer{10000}
+  {
+    Set(delay);
+  }
+
+  void Reset()
+  {
+    SetableLongTimer::Reset();
+    this->state = true;
+  }
+
+  bool Check()
+  {
+    if (this->state && SetableLongTimer::Check())
+    {
+      this->state = false;
+      return true;
+    }
+    return false;
+  }
+
+  void Stop()
+  {
+    this->state = false;
+  }
 };
 
 // Timer that allows to two have 2 delay times that can be used
@@ -117,7 +170,6 @@ protected:
 public:
   TimerOneShot(const unsigned int delay) : Timer{delay}
   {
-    Reset();
   }
 
   void Reset()
