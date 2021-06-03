@@ -37,6 +37,20 @@ public:
   {
     return (millis() - this->start >= this->delay);
   }
+
+  unsigned int SetPoint()
+  {
+    return delay;
+  }
+
+  unsigned int Remaining()
+  {
+    if (Check())
+    {
+      return 0;
+    }
+    return (this->delay - (millis() - this->start));
+  }
 };
 
 class SetableTimer : public Timer
@@ -52,7 +66,6 @@ public:
   }
 };
 
-// untested
 class SetableLongTimer : public Timer
 {
 protected:
