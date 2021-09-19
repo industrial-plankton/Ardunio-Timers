@@ -1,3 +1,5 @@
+#ifndef IP_TIMERS_H
+#define IP_TIMERS_H
 /*
 *  Copyright (C) 2020 Industrial Plankton IndustrialPlankton.com
 *  
@@ -207,3 +209,5 @@ public:
     return false;
   }
 };
+
+#endif
