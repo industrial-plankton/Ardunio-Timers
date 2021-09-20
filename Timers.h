@@ -32,189 +32,76 @@ protected:
   unsigned int delay;
 
 public:
-  Timer(const unsigned int delay) : delay{delay}
-  {
-    Reset();
-  }
+  Timer(const unsigned int delay) : delay{delay} { Reset(); }
 
-  void Reset()
-  {
-    this->start = millis();
-  }
+  // Sets Timers start point to now
+  void Reset();
 
-  bool Check()
-  {
-    return (millis() - this->start >= this->delay);
-  }
+  // Change the timers setpoint
+  void Set(unsigned int delay);
 
-  unsigned int SetPoint()
-  {
-    return delay;
-  }
+  // Check if set duration has elapsed returns true if so
+  bool Check();
 
-  unsigned int Remaining()
-  {
-    if (Check())
-    {
-      return 0;
-    }
-    return (this->delay - (millis() - this->start));
-  }
+  // Returns the duration (ms) this timer is set to
+  unsigned int SetPoint();
+
+  // Return ms remaining before duration is reached
+  unsigned int Remaining();
 };
 
-class SetableTimer : public Timer
-{
-public:
-  SetableTimer(const unsigned int delay) : Timer{delay}
-  {
-  }
-
-  void Set(unsigned int delay)
-  {
-    this->delay = delay;
-  }
-};
-
-class SetableLongTimer : public Timer
+// Timer using a Long for its setpoint for very slow events
+class LongTimer : public Timer
 {
 protected:
   unsigned long delay;
 
 public:
-  SetableLongTimer(const unsigned long delay) : Timer{10000}
-  {
-    Set(delay);
-  }
+  LongTimer(const unsigned long delay) : Timer{10000} { Set(delay); }
 
-  void Set(unsigned long delay)
-  {
-    this->delay = delay;
-  }
-
-  bool Check()
-  {
-    return (millis() - this->start >= this->delay);
-  }
-
-  unsigned long SetPoint()
-  {
-    return delay;
-  }
-
-  unsigned long Remaining()
-  {
-    if (this->Check())
-    {
-      return 0;
-    }
-    return (this->delay - (millis() - this->start));
-  }
+  void Set(unsigned long delay);
+  bool Check();
+  unsigned long SetPoint();
+  unsigned long Remaining();
 };
 
 // untested
-class SetableLongTimerOneShot : public SetableLongTimer
+class LongTimerOneShot : public LongTimer
 {
 protected:
   bool state = false;
 
 public:
-  SetableLongTimerOneShot(const unsigned long delay) : SetableLongTimer{10000}
-  {
-    Set(delay);
-  }
+  LongTimerOneShot(const unsigned long delay) : LongTimer{10000} { Set(delay); }
 
-  void Reset()
-  {
-    SetableLongTimer::Reset();
-    this->state = true;
-  }
-
-  bool Check()
-  {
-    if (this->state && SetableLongTimer::Check())
-    {
-      this->state = false;
-      return true;
-    }
-    return false;
-  }
-
-  void Stop()
-  {
-    this->state = false;
-  }
+  void Reset();
+  bool Check();
+  void Stop();
 };
 
-// Timer that allows to two have 2 delay times that can be used
-class TimerMulti : public Timer
-{
-protected:
-  unsigned int delay1;
-  unsigned int delay2;
-
-public:
-  TimerMulti(const unsigned int delay, const unsigned int delay2) : Timer{delay}, delay1{delay}, delay2{delay2}
-  {
-  }
-
-  void Reset()
-  {
-    this->delay = this->delay1;
-    Timer::Reset();
-  }
-
-  void Reset2()
-  {
-    this->delay = this->delay2;
-    Timer::Reset();
-  }
-};
-
-// Timer that once triggered and Checked needs to be reset before it before it will be true again
+// Timer that once triggered and Checked needs to be reset before it before it will be true again.
+// Main purpose is to allow triggering of an event x time after another event, but not continuously
 class TimerOneShot : public Timer
 {
 protected:
   bool state = false;
 
 public:
-  TimerOneShot(const unsigned int delay) : Timer{delay}
-  {
-  }
+  TimerOneShot(const unsigned int delay) : Timer{delay} {}
 
-  void Reset()
-  {
-    Timer::Reset();
-    this->state = true;
-  }
-
-  bool Check()
-  {
-    if (this->state && Timer::Check())
-    {
-      this->state = false;
-      return true;
-    }
-    return false;
-  }
+  void Reset();
+  bool Check();
+  void Stop();
 };
 
 // Timer that gets reset automatically reset once it triggers
+// Main purpose is a periodic event
 class TimerAutoReset : public Timer
 {
 public:
-  TimerAutoReset(const unsigned int delay) : Timer{delay}
-  {
-  }
+  TimerAutoReset(const unsigned int delay) : Timer{delay} {}
 
-  bool Check()
-  {
-    if (Timer::Check())
-    {
-      this->Reset();
-      return true;
-    }
-    return false;
-  }
+  bool Check();
 };
 
 #endif
