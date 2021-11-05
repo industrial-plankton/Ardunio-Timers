@@ -41,13 +41,13 @@ public:
   void Set(unsigned int delay);
 
   // Check if set duration has elapsed returns true if so
-  bool Check();
+  bool Check() const;
 
   // Returns the duration (ms) this timer is set to
-  unsigned int SetPoint();
+  unsigned int SetPoint() const;
 
   // Return ms remaining before duration is reached
-  unsigned int Remaining();
+  unsigned int Remaining() const;
 };
 
 // Timer using a Long for its setpoint for very slow events
@@ -60,9 +60,9 @@ public:
   LongTimer(const unsigned long delay) : Timer{10000} { Set(delay); }
 
   void Set(unsigned long delay);
-  bool Check();
-  unsigned long SetPoint();
-  unsigned long Remaining();
+  bool Check() const;
+  unsigned long SetPoint() const;
+  unsigned long Remaining() const;
 };
 
 // untested

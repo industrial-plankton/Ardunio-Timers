@@ -5,17 +5,17 @@ void Timer::Reset()
     this->start = millis();
 }
 
-bool Timer::Check()
+bool Timer::Check() const
 {
     return (millis() - this->start >= this->delay);
 }
 
-unsigned int Timer::SetPoint()
+unsigned int Timer::SetPoint() const
 {
     return delay;
 }
 
-unsigned int Timer::Remaining()
+unsigned int Timer::Remaining() const
 {
     if (Check())
     {
@@ -34,17 +34,17 @@ void LongTimer::Set(unsigned long delay)
     this->delay = delay;
 }
 
-bool LongTimer::Check()
+bool LongTimer::Check() const
 {
     return (millis() - this->start >= this->delay);
 }
 
-unsigned long LongTimer::SetPoint()
+unsigned long LongTimer::SetPoint() const
 {
     return delay;
 }
 
-unsigned long LongTimer::Remaining()
+unsigned long LongTimer::Remaining() const
 {
     if (this->Check())
     {
