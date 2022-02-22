@@ -40,6 +40,9 @@ public:
   // Change the timers setpoint
   void Set(unsigned int delay);
 
+  // Adjust remaining time
+  void Adjust(unsigned int remaining);
+
   // Check if set duration has elapsed returns true if so
   bool Check() const;
 
@@ -60,6 +63,7 @@ public:
   LongTimer(const unsigned long delay) : Timer{10000} { Set(delay); }
 
   void Set(unsigned long delay);
+  void Adjust(unsigned long remaining);
   bool Check() const;
   unsigned long SetPoint() const;
   unsigned long Remaining() const;

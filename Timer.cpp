@@ -29,9 +29,19 @@ void Timer::Set(unsigned int delay)
     this->delay = delay;
 }
 
+void Timer::Adjust(unsigned int remaining)
+{
+    this->start = millis() + remaining - this->delay;
+}
+
 void LongTimer::Set(unsigned long delay)
 {
     this->delay = delay;
+}
+
+void LongTimer::Adjust(unsigned long remaining)
+{
+    this->start = millis() + remaining - this->delay;
 }
 
 bool LongTimer::Check() const
