@@ -29,28 +29,28 @@ class Timer
 {
 protected:
   volatile unsigned long start = 0;
-  unsigned int delay;
+  uint16_t delay;
 
 public:
-  Timer(const unsigned int delay) : delay{delay} { Reset(); }
+  Timer(const uint16_t delay) : delay{delay} { Reset(); }
 
   // Sets Timers start point to now
   void Reset();
 
   // Change the timers setpoint
-  void Set(unsigned int delay);
+  void Set(uint16_t delay);
 
   // Adjust remaining time
-  void Adjust(unsigned int remaining);
+  void Adjust(uint16_t remaining);
 
   // Check if set duration has elapsed returns true if so
   bool Check() const;
 
   // Returns the duration (ms) this timer is set to
-  unsigned int SetPoint() const;
+  uint16_t SetPoint() const;
 
   // Return ms remaining before duration is reached
-  unsigned int Remaining() const;
+  uint16_t Remaining() const;
 };
 
 // Timer using a Long for its setpoint for very slow events
@@ -91,7 +91,7 @@ protected:
   bool state = false;
 
 public:
-  TimerOneShot(const unsigned int delay) : Timer{delay} {}
+  TimerOneShot(const uint16_t delay) : Timer{delay} {}
 
   void Reset();
   bool Check();
@@ -103,7 +103,7 @@ public:
 class TimerAutoReset : public Timer
 {
 public:
-  TimerAutoReset(const unsigned int delay) : Timer{delay} {}
+  TimerAutoReset(const uint16_t delay) : Timer{delay} {}
 
   bool Check();
 };

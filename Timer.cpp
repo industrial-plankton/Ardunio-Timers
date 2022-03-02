@@ -10,12 +10,12 @@ bool Timer::Check() const
     return (millis() - this->start >= this->delay);
 }
 
-unsigned int Timer::SetPoint() const
+uint16_t Timer::SetPoint() const
 {
     return delay;
 }
 
-unsigned int Timer::Remaining() const
+uint16_t Timer::Remaining() const
 {
     if (Check())
     {
@@ -24,12 +24,12 @@ unsigned int Timer::Remaining() const
     return (this->delay - (millis() - this->start));
 }
 
-void Timer::Set(unsigned int delay)
+void Timer::Set(uint16_t delay)
 {
     this->delay = delay;
 }
 
-void Timer::Adjust(unsigned int remaining)
+void Timer::Adjust(uint16_t remaining)
 {
     this->start = millis() + remaining - this->delay;
 }
