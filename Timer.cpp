@@ -5,6 +5,14 @@ void Timer::Reset()
     this->start = millis();
 }
 
+void Timer::Next()
+{
+    this->start = this->start + this->SetPoint();
+    if (this->Check()){
+        this->Reset();
+    }
+}
+
 bool Timer::Check() const
 {
     return (millis() - this->start >= this->delay);
@@ -112,7 +120,7 @@ bool TimerAutoReset::Check()
 {
     if (Timer::Check())
     {
-        this->Reset();
+        this->Next();
         return true;
     }
     return false;

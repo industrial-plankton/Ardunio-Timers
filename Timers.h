@@ -37,6 +37,9 @@ public:
   // Sets Timers start point to now
   void Reset();
 
+  // Shifts timers start point along, resets if timer would be elapsed still
+  void Next();
+
   // Change the timers setpoint
   void Set(uint16_t delay);
 
