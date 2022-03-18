@@ -1,11 +1,11 @@
 #include <Timers.h>
 
-void Timer::Reset()
+void TimerBase::Reset()
 {
     this->start = millis();
 }
 
-void Timer::Next()
+void TimerBase::Next()
 {
     this->start = this->start + this->SetPoint();
     if (this->Check()){
@@ -18,7 +18,7 @@ bool Timer::Check() const
     return (millis() - this->start >= this->delay);
 }
 
-uint16_t Timer::SetPoint() const
+uint32_t Timer::SetPoint() const
 {
     return delay;
 }

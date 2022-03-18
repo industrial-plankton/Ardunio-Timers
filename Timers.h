@@ -25,20 +25,24 @@ SOFTWARE.
 */
 #include <Arduino.h>
 
-class Timer
+class TimerBase
+{
+public:
+  volatile unsigned long start = 0;
+  void Reset();                          // Sets Timers start point to now
+  void Next();                           // Shifts timers start point along, resets if timer would be elapsed still
+  virtual bool Check() const = 0;        // Check if set duration has elapsed returns true if so
+  virtual uint32_t SetPoint() const = 0; // Returns the duration (ms) this timer is set to
+  TimerBase() { Reset(); }
+};
+
+class Timer : public TimerBase
 {
 protected:
-  volatile unsigned long start = 0;
   uint16_t delay;
 
 public:
-  Timer(const uint16_t delay) : delay{delay} { Reset(); }
-
-  // Sets Timers start point to now
-  void Reset();
-
-  // Shifts timers start point along, resets if timer would be elapsed still
-  void Next();
+  explicit Timer(const uint16_t delay) : TimerBase(), delay{delay} {}
 
   // Change the timers setpoint
   void Set(uint16_t delay);
@@ -46,29 +50,26 @@ public:
   // Adjust remaining time
   void Adjust(uint16_t remaining);
 
-  // Check if set duration has elapsed returns true if so
-  bool Check() const;
-
-  // Returns the duration (ms) this timer is set to
-  uint16_t SetPoint() const;
+  bool Check() const override;
+  uint32_t SetPoint() const override;
 
   // Return ms remaining before duration is reached
   uint16_t Remaining() const;
 };
 
 // Timer using a Long for its setpoint for very slow events
-class LongTimer : public Timer
+class LongTimer : public TimerBase
 {
 protected:
   unsigned long delay;
 
 public:
-  LongTimer(const unsigned long delay) : Timer{10000} { Set(delay); }
+  explicit LongTimer(const unsigned long delay) : TimerBase(), delay{delay} {}
 
   void Set(unsigned long delay);
   void Adjust(unsigned long remaining);
-  bool Check() const;
-  unsigned long SetPoint() const;
+  bool Check() const override;
+  unsigned long SetPoint() const override;
   unsigned long Remaining() const;
 };
 
@@ -79,7 +80,7 @@ protected:
   bool state = false;
 
 public:
-  LongTimerOneShot(const unsigned long delay) : LongTimer{10000} { Set(delay); }
+  explicit LongTimerOneShot(const unsigned long delay) : LongTimer(delay) {}
 
   void Reset();
   bool Check();
@@ -94,7 +95,7 @@ protected:
   bool state = false;
 
 public:
-  TimerOneShot(const uint16_t delay) : Timer{delay} {}
+  explicit TimerOneShot(const uint16_t delay) : Timer(delay) {}
 
   void Reset();
   bool Check();
@@ -106,7 +107,7 @@ public:
 class TimerAutoReset : public Timer
 {
 public:
-  TimerAutoReset(const uint16_t delay) : Timer{delay} {}
+  explicit TimerAutoReset(const uint16_t delay) : Timer(delay) {}
 
   bool Check();
 };
