@@ -7,64 +7,65 @@ void TimerBase::Reset()
 
 void TimerBase::Next()
 {
-    this->start = this->start + this->SetPoint();
-    if (this->Check()){
+    this->start = this->start + this->getSetPoint();
+    if (this->isElapsed())
+    {
         this->Reset();
     }
 }
 
-bool Timer::Check() const
+bool Timer::isElapsed() const
 {
     return (millis() - this->start >= this->delay);
 }
 
-uint32_t Timer::SetPoint() const
+uint32_t Timer::getSetPoint() const
 {
     return delay;
 }
 
-uint16_t Timer::Remaining() const
+uint16_t Timer::getRemaining() const
 {
-    if (Check())
+    if (isElapsed())
     {
         return 0;
     }
     return (this->delay - (millis() - this->start));
 }
 
-void Timer::Set(uint16_t delay)
+void Timer::setDelay(uint16_t delay)
 {
     this->delay = delay;
 }
 
-void Timer::Adjust(uint16_t remaining)
+void Timer::setRemaining(uint16_t remaining)
 {
     this->start = millis() + remaining - this->delay;
 }
 
-void LongTimer::Set(unsigned long delay)
+void LongTimer::setDelay(unsigned long delay)
 {
     this->delay = delay;
 }
 
-void LongTimer::Adjust(unsigned long remaining)
+void LongTimer::setRemaining(unsigned long remaining)
 {
     this->start = millis() + remaining - this->delay;
 }
 
-bool LongTimer::Check() const
+bool LongTimer::isElapsed() const
 {
     return (millis() - this->start >= this->delay);
 }
 
-unsigned long LongTimer::SetPoint() const
+unsigned long LongTimer::getSetPoint() const
 {
     return delay;
 }
 
-unsigned long LongTimer::Remaining() const
+unsigned long LongTimer::getRemaining() const
 {
-    if (this->Check())
+    if (this->isElapsed())
     {
         return 0;
     }
@@ -78,9 +79,9 @@ void LongTimerOneShot::Reset()
     this->state = true;
 }
 
-bool LongTimerOneShot::Check()
+bool LongTimerOneShot::isElapsed()
 {
-    if (this->state && LongTimer::Check())
+    if (this->state && LongTimer::isElapsed())
     {
         this->state = false;
         return true;
@@ -100,9 +101,9 @@ void TimerOneShot::Reset()
     this->state = true;
 }
 
-bool TimerOneShot::Check()
+bool TimerOneShot::isElapsed()
 {
-    if (this->state && Timer::Check())
+    if (this->state && Timer::isElapsed())
     {
         this->state = false;
         return true;
@@ -116,9 +117,9 @@ void TimerOneShot::Stop()
 }
 
 // Timer that gets reset automatically reset once it triggers
-bool TimerAutoReset::Check()
+bool TimerAutoReset::isElapsed()
 {
-    if (Timer::Check())
+    if (Timer::isElapsed())
     {
         this->Next();
         return true;

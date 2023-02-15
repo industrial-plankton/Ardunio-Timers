@@ -29,10 +29,10 @@ class TimerBase
 {
 public:
   volatile unsigned long start = 0;
-  void Reset();                          // Sets Timers start point to now
-  void Next();                           // Shifts timers start point along, resets if timer would be elapsed still
-  virtual bool Check() const = 0;        // Check if set duration has elapsed returns true if so
-  virtual uint32_t SetPoint() const = 0; // Returns the duration (ms) this timer is set to
+  void Reset();                             // Sets Timers start point to now
+  void Next();                              // Shifts timers start point along, resets if timer would be elapsed still
+  virtual bool isElapsed() const = 0;       // isElapsed if set duration has elapsed returns true if so
+  virtual uint32_t getSetPoint() const = 0; // Returns the duration (ms) this timer is set to
   TimerBase() { Reset(); }
 };
 
@@ -45,16 +45,16 @@ public:
   explicit Timer(const uint16_t delay) : TimerBase(), delay{delay} {}
 
   // Change the timers setpoint
-  void Set(uint16_t delay);
+  void setDelay(uint16_t delay);
 
-  // Adjust remaining time
-  void Adjust(uint16_t remaining);
+  // setRemaining remaining time
+  void setRemaining(uint16_t remaining);
 
-  bool Check() const override;
-  uint32_t SetPoint() const override;
+  bool isElapsed() const override;
+  uint32_t getSetPoint() const override;
 
   // Return ms remaining before duration is reached
-  uint16_t Remaining() const;
+  uint16_t getRemaining() const;
 };
 
 // Timer using a Long for its setpoint for very slow events
@@ -66,11 +66,11 @@ protected:
 public:
   explicit LongTimer(const unsigned long delay) : TimerBase(), delay{delay} {}
 
-  void Set(unsigned long delay);
-  void Adjust(unsigned long remaining);
-  bool Check() const override;
-  unsigned long SetPoint() const override;
-  unsigned long Remaining() const;
+  void setDelay(unsigned long delay);
+  void setRemaining(unsigned long remaining);
+  bool isElapsed() const override;
+  unsigned long getSetPoint() const override;
+  unsigned long getRemaining() const;
 };
 
 // untested
@@ -83,7 +83,7 @@ public:
   explicit LongTimerOneShot(const unsigned long delay) : LongTimer(delay) {}
 
   void Reset();
-  bool Check();
+  bool isElapsed();
   void Stop();
 };
 
@@ -98,7 +98,7 @@ public:
   explicit TimerOneShot(const uint16_t delay) : Timer(delay) {}
 
   void Reset();
-  bool Check();
+  bool isElapsed();
   void Stop();
 };
 
@@ -109,7 +109,7 @@ class TimerAutoReset : public Timer
 public:
   explicit TimerAutoReset(const uint16_t delay) : Timer(delay) {}
 
-  bool Check();
+  bool isElapsed();
 };
 
 #endif
