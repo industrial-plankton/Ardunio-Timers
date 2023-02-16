@@ -36,13 +36,13 @@ public:
   TimerBase() { Reset(); }
 };
 
-class Timer : public TimerBase
+class TimerOld : public TimerBase
 {
 protected:
   uint16_t delay;
 
 public:
-  explicit Timer(const uint16_t delay) : TimerBase(), delay{delay} {}
+  explicit TimerOld(const uint16_t delay) : TimerBase(), delay{delay} {}
 
   // Change the timers setpoint
   void setDelay(uint16_t delay);
@@ -89,13 +89,13 @@ public:
 
 // Timer that once triggered and Checked needs to be reset before it before it will be true again.
 // Main purpose is to allow triggering of an event x time after another event, but not continuously
-class TimerOneShot : public Timer
+class TimerOneShot : public TimerOld
 {
 protected:
   bool state = false;
 
 public:
-  explicit TimerOneShot(const uint16_t delay) : Timer(delay) {}
+  explicit TimerOneShot(const uint16_t delay) : TimerOld(delay) {}
 
   void Reset();
   bool isElapsed();
@@ -104,10 +104,10 @@ public:
 
 // Timer that gets reset automatically reset once it triggers
 // Main purpose is a periodic event
-class TimerAutoReset : public Timer
+class TimerAutoReset : public TimerOld
 {
 public:
-  explicit TimerAutoReset(const uint16_t delay) : Timer(delay) {}
+  explicit TimerAutoReset(const uint16_t delay) : TimerOld(delay) {}
 
   bool isElapsed();
 };
