@@ -1,49 +1,55 @@
 #include <AbstractTimer.h>
-void TimerWithSource::Reset()
+void TimerWithSource::reset()
 {
-    this->start = timerSource.SystemTime();
-    this->running = true;
+    this->Starting_ms = timerSource.getSystemTime();
+    this->Active = true;
+    Elapsed = false;
 };
 
-void TimerWithSource::Next()
+void TimerWithSource::next()
 {
-    this->start = this->start + this->getDelay();
-    if (this->timerSource.SystemTime())
+    this->Starting_ms = this->Starting_ms + this->getDelay_ms();
+    if (this->timerSource.getSystemTime())
     {
-        this->Reset();
+        this->reset();
     }
 };
 
-bool TimerWithSource::isElapsed() const
+bool TimerWithSource::isElapsed()
 {
-    return (running && (this->timerSource.SystemTime() - this->start) >= this->delay);
+    if (Active && (this->timerSource.getSystemTime() - this->Starting_ms) >= this->Delay_ms)
+    {
+        Elapsed = true;
+    }
+    return Elapsed;
 };
 
-void TimerWithSource::setDelay(unsigned long delay)
+void TimerWithSource::setDelay_ms(unsigned long delay_ms)
 {
-    this->delay = delay;
+    Delay_ms = delay_ms;
 };
 
-unsigned long TimerWithSource::getDelay() const
+unsigned long TimerWithSource::getDelay_ms() const
 {
-    return delay;
+    return Delay_ms;
 };
 
-void TimerWithSource::setRemaining(unsigned long remaining)
+void TimerWithSource::setRemaining_ms(unsigned long remaining)
 {
-    this->start = this->timerSource.SystemTime() + remaining - this->delay;
+    Elapsed = false;
+    Starting_ms = timerSource.getSystemTime() + remaining - Delay_ms;
 };
 
-unsigned long TimerWithSource::getRemaining() const
+unsigned long TimerWithSource::getRemaining_ms()
 {
-    if (isElapsed() || !this->running)
+    if (isElapsed() || !Active)
     {
         return 0;
     }
-    return (this->delay - (this->timerSource.SystemTime() - this->start));
+    return (Delay_ms - (timerSource.getSystemTime() - Starting_ms));
 };
 
-void TimerWithSource::Stop()
+void TimerWithSource::stop()
 {
-    this->running = false;
+    Active = false;
 };
