@@ -1,7 +1,7 @@
 #ifndef h_Abstract_Timer
 #define h_Abstract_Timer
 
-class TimerSource // Wrapper object around a system time source for creating system independent timers
+class TimerSource // Wrapper object around a time source for creating system independent timers
 {
 public:
     virtual unsigned long getSystemTime() const = 0; // millis() in arduino
@@ -21,12 +21,11 @@ static DefaultTimerSource *globalTimerSource;
 class Timer
 {
 public:
-    virtual void reset() = 0;     // Sets Timers start point to now
-    virtual void next() = 0;      // Shifts timers start point along, resets if timer would be elapsed still
-    virtual bool isElapsed() = 0; // Check if set duration has elapsed returns true if so
-    virtual void setDelay_ms(unsigned long delay) = 0;
+    virtual void reset() = 0; // Sets Timers start point to now
+    virtual void next() = 0;  // Shifts timers start point along, resets if timer would be elapsed still
+    virtual bool isElapsed() = 0;
+    virtual void setDelay_ms(unsigned long delay_ms) = 0;
     virtual unsigned long getDelay_ms() const = 0; // Returns the duration (ms) this timer is set to
-    // explicit Timer(const unsigned long delay, TimerSource &timerSource) : delay{delay}, timerSource{timerSource} {} // Suggested constructor on the concrete class
 };
 
 class ExtendedTimer : public Timer
@@ -47,8 +46,8 @@ private:
     bool Elapsed = false;
 
 public:
-    explicit TimerWithSource(unsigned long delay, TimerSource &timerSource) : Delay_ms{delay},
-                                                                              timerSource{timerSource}
+    explicit TimerWithSource(unsigned long delay_ms, TimerSource &timerSource) : Delay_ms{delay_ms},
+                                                                                 timerSource{timerSource}
     {
         reset();
     };
@@ -56,7 +55,7 @@ public:
     void reset(); // Sets Timers start point to now
     void next();  // Shifts timers start point along, resets if timer would be elapsed still, not recommend if stop is used
     bool isElapsed();
-    void setDelay_ms(unsigned long delay);
+    void setDelay_ms(unsigned long delay_ms);
     unsigned long getDelay_ms() const;
     void setRemaining_ms(unsigned long remaining);
     unsigned long getRemaining_ms();
@@ -66,7 +65,7 @@ public:
 class TimerDefault : public TimerWithSource
 {
 public:
-    TimerDefault(const unsigned long delay) : TimerWithSource(delay, *globalTimerSource){};
+    TimerDefault(const unsigned long delay_ms) : TimerWithSource(delay_ms, *globalTimerSource){};
 };
 
 // Example DefaultTimerSource for Arduino

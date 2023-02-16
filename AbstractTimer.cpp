@@ -1,27 +1,28 @@
 #include <AbstractTimer.h>
 void TimerWithSource::reset()
 {
-    this->Starting_ms = timerSource.getSystemTime();
-    this->Active = true;
+    Active = true;
     Elapsed = false;
+    Starting_ms = timerSource.getSystemTime();
 };
 
 void TimerWithSource::next()
 {
-    this->Starting_ms = this->Starting_ms + this->getDelay_ms();
-    if (this->timerSource.getSystemTime())
+    Active = true;
+    Starting_ms += getDelay_ms();
+    if (isElapsed())
     {
-        this->reset();
+        reset();
     }
 };
 
 bool TimerWithSource::isElapsed()
 {
-    if (Active && (this->timerSource.getSystemTime() - this->Starting_ms) >= this->Delay_ms)
+    if (Active && (timerSource.getSystemTime() - Starting_ms) >= Delay_ms)
     {
         Elapsed = true;
     }
-    return Elapsed;
+    return Active && Elapsed;
 };
 
 void TimerWithSource::setDelay_ms(unsigned long delay_ms)
