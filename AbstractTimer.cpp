@@ -9,8 +9,9 @@ void TimerWithSource::reset()
 void TimerWithSource::next()
 {
     Active = true;
+    Elapsed = false;
     Starting_ms += getDelay_ms();
-    if (isElapsed())
+    if (isElapsed()) // still elapsed after forward shift
     {
         reset();
     }
