@@ -10,13 +10,13 @@ public:
 class DefaultTimerSource : public TimerSource
 {
 private:
-    const TimerSource &timerSource;
+    TimerSource &timerSource;
 
 public:
-    explicit DefaultTimerSource(const TimerSource &timerSource) : timerSource{timerSource} {};
+    explicit DefaultTimerSource(TimerSource &timerSource) : timerSource{timerSource} {};
     unsigned long SystemTime() const { return timerSource.SystemTime(); };
 };
-DefaultTimerSource *globalTimerSource = __null;
+static DefaultTimerSource *globalTimerSource;
 
 class Timer
 {
@@ -42,11 +42,11 @@ class TimerWithSource : public ExtendedTimer
 private:
     volatile unsigned long start;
     unsigned long delay;
-    const TimerSource &timerSource;
+    TimerSource &timerSource;
     bool running = false;
 
 public:
-    explicit TimerWithSource(const unsigned long delay, const TimerSource &timerSource) : delay{delay}, timerSource{timerSource} { Reset(); };
+    explicit TimerWithSource(unsigned long delay, TimerSource &timerSource) : delay{delay}, timerSource{timerSource} { Reset(); };
 
     void Reset();           // Sets Timers start point to now
     void Next();            // Shifts timers start point along, resets if timer would be elapsed still, not recommend if stop is used
@@ -75,10 +75,10 @@ public:
 
 // void dummyMain()
 // {
-//     const ArduinoTimerSource ArduinoSource;
+//     ArduinoTimerSource ArduinoSource;
 //     TimerWithSource timer(1000, ArduinoSource);
 // or
-//     const ArduinoTimerSource ArduinoSource;
+//     ArduinoTimerSource ArduinoSource;
 //     globalTimerSource = new DefaultTimerSource(ArduinoSource);
 //     TimerDefault timer (1000)
 
