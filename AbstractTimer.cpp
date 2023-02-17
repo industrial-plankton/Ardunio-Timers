@@ -10,7 +10,7 @@ void TimerWithSource::reset()
     Active = true;
     Elapsed = false;
     Starting_ms = timerSource.getSystemTime();
-};
+}
 
 void TimerWithSource::next()
 {
@@ -21,7 +21,7 @@ void TimerWithSource::next()
     {
         reset();
     }
-};
+}
 
 bool TimerWithSource::isElapsed()
 {
@@ -30,24 +30,24 @@ bool TimerWithSource::isElapsed()
         Elapsed = true;
     }
     return Active && Elapsed;
-};
+}
 
 void TimerWithSource::setDelay_ms(unsigned long delay_ms)
 {
     Delay_ms = delay_ms;
-};
+}
 
 unsigned long TimerWithSource::getDelay_ms() const
 {
     return Delay_ms;
-};
+}
 
 void TimerWithSource::setRemaining_ms(unsigned long remaining)
 {
     Elapsed = false;
     // Starting_ms = timerSource.getSystemTime() + remaining - Delay_ms;
     Starting_ms += getRemaining_ms() - remaining;
-};
+}
 
 unsigned long TimerWithSource::getRemaining_ms() const
 {
@@ -56,9 +56,9 @@ unsigned long TimerWithSource::getRemaining_ms() const
         return 0;
     }
     return Delay_ms - getDuration();
-};
+}
 
 void TimerWithSource::stop()
 {
     Active = false;
-};
+}
