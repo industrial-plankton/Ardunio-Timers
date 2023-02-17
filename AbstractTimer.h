@@ -20,6 +20,9 @@ static DefaultTimerSource *globalTimerSource;
 
 class Timer
 {
+private:
+    virtual unsigned long getDuration() const = 0;
+
 public:
     virtual void reset() = 0; // Sets Timers start point to now
     virtual void next() = 0;  // Shifts timers start point along, resets if timer would be elapsed still
@@ -32,7 +35,7 @@ class ExtendedTimer : public Timer
 {
 public:
     virtual void setRemaining_ms(unsigned long remaining) = 0;
-    virtual unsigned long getRemaining_ms() = 0;
+    virtual unsigned long getRemaining_ms() const = 0;
     virtual void stop() = 0;
 };
 
@@ -42,8 +45,9 @@ private:
     volatile unsigned long Starting_ms;
     unsigned long Delay_ms;
     TimerSource &timerSource;
-    bool Active = false;
+    bool Active = true;
     bool Elapsed = false;
+    unsigned long getDuration() const;
 
 public:
     explicit TimerWithSource(unsigned long delay_ms, TimerSource &timerSource) : Delay_ms{delay_ms},
@@ -58,7 +62,7 @@ public:
     void setDelay_ms(unsigned long delay_ms);
     unsigned long getDelay_ms() const;
     void setRemaining_ms(unsigned long remaining);
-    unsigned long getRemaining_ms();
+    unsigned long getRemaining_ms() const;
     void stop(); // stop timer, causing all isElapsed checks to return false and getRemaining_ms to return 0;
 };
 

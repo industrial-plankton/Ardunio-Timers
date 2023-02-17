@@ -1,4 +1,10 @@
 #include <AbstractTimer.h>
+
+unsigned long TimerWithSource::getDuration() const
+{
+    return timerSource.getSystemTime() - Starting_ms;
+}
+
 void TimerWithSource::reset()
 {
     Active = true;
@@ -19,7 +25,7 @@ void TimerWithSource::next()
 
 bool TimerWithSource::isElapsed()
 {
-    if (Active && (timerSource.getSystemTime() - Starting_ms) >= Delay_ms)
+    if (Active && getDuration() >= Delay_ms)
     {
         Elapsed = true;
     }
@@ -39,16 +45,17 @@ unsigned long TimerWithSource::getDelay_ms() const
 void TimerWithSource::setRemaining_ms(unsigned long remaining)
 {
     Elapsed = false;
-    Starting_ms = timerSource.getSystemTime() + remaining - Delay_ms;
+    // Starting_ms = timerSource.getSystemTime() + remaining - Delay_ms;
+    Starting_ms += getRemaining_ms() - remaining;
 };
 
-unsigned long TimerWithSource::getRemaining_ms()
+unsigned long TimerWithSource::getRemaining_ms() const
 {
-    if (isElapsed() || !Active)
+    if (Elapsed || getDuration() >= Delay_ms)
     {
         return 0;
     }
-    return (Delay_ms - (timerSource.getSystemTime() - Starting_ms));
+    return Delay_ms - getDuration();
 };
 
 void TimerWithSource::stop()
