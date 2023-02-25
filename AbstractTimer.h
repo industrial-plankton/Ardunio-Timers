@@ -1,5 +1,5 @@
-#ifndef h_Abstract_Timer
-#define h_Abstract_Timer
+#ifndef h_IP_Abstract_Timer
+#define h_IP_Abstract_Timer
 
 class TimerSource // Wrapper object around a time source for creating system independent timers
 {
