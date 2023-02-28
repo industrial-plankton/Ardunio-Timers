@@ -11,7 +11,11 @@ class DefaultTimerSource : public TimerSource
 {
 private:
     // Tried using std::function<unsigned long(void)> getSystemTime; and lambdas
-    // It felt cleaner in alot of ways be you couldn't change the global source on the fly or in the declaration section of code
+    // It felt cleaner in alot of ways be you couldn't change the global/default source on the fly or assign in the declaration section of code
+
+    // Also tried Raw function pointers (unsigned long (*DefaultSystemTime)(void);)
+    // but thats just virtual TimerSource with less abstraction, could be better, could be more prone to error.
+
     TimerSource &timerSource;
 
 public:

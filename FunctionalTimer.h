@@ -69,10 +69,4 @@ unsigned long getRemaining_ms(FuncTimer timerData)
     return timerData.delay - getDuration(timerData);
 }
 
-FuncTimer stop(FuncTimer timerData)
-{
-    timerData.Active = false;
-    return timerData;
-}
-
 #endif
