@@ -10,6 +10,8 @@ public:
 class DefaultTimerSource : public TimerSource
 {
 private:
+    // Tried using std::function<unsigned long(void)> getSystemTime; and lambdas
+    // It felt cleaner in alot of ways be you couldn't change the global source on the fly or in the declaration section of code
     TimerSource &timerSource;
 
 public:
