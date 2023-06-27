@@ -1,13 +1,6 @@
 #include "unity.h"
 #include <AbstractTimer.h>
-
-class AbstractTimerDummyTime : public TimerSource // Wrapper object around a system time source for creating system independent timers
-{
-public:
-    AbstractTimerDummyTime(){};
-    long time = 0;
-    unsigned long getSystemTime() const { return time; };
-};
+#include <DummyTime.h>
 
 void setUpAbstractTimers(void)
 {
@@ -21,7 +14,7 @@ void tearDownAbstractTimers(void)
 
 void test_wraparound()
 {
-    AbstractTimerDummyTime testTime;
+    DummyTimeSource testTime;
     testTime.time = 100;
     TimerWithSource TimerToTest(10, testTime);
     testTime.time = 105;
@@ -36,7 +29,7 @@ void test_wraparound()
 
 void test_next()
 {
-    AbstractTimerDummyTime testTime;
+    DummyTimeSource testTime;
     testTime.time = 100;
     TimerWithSource TimerToTest(10, testTime);
     TimerToTest.next();
