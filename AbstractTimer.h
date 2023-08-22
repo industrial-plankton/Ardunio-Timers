@@ -20,7 +20,7 @@ private:
 
 public:
     explicit DefaultTimerSource(TimerSource &timerSource) : timerSource{timerSource} {};
-    unsigned long getSystemTime() const { return timerSource.getSystemTime(); };
+    unsigned long getSystemTime() const override { return timerSource.getSystemTime(); };
 };
 static DefaultTimerSource *globalTimerSource;
 
@@ -53,29 +53,29 @@ private:
     TimerSource &timerSource;
     bool Active = true;
     bool Elapsed = false;
-    unsigned long getDuration() const;
+    unsigned long getDuration() const override;
 
 public:
     explicit TimerWithSource(unsigned long delay_ms, TimerSource &timerSource) : Delay_ms{delay_ms},
                                                                                  timerSource{timerSource}
     {
-        reset();
+        this->reset();
     };
 
-    void reset(); // Sets Timers start point to now
-    void next();  // Shifts timers start point along, resets if timer would be elapsed still, not recommend if stop is used
-    bool isElapsed();
-    void setDelay_ms(unsigned long delay_ms);
-    unsigned long getDelay_ms() const;
-    void setRemaining_ms(unsigned long remaining);
-    unsigned long getRemaining_ms() const;
-    void stop(); // stop timer, causing all isElapsed checks to return false and getRemaining_ms to return 0;
+    void reset() override; // Sets Timers start point to now
+    void next() override;  // Shifts timers start point along, resets if timer would be elapsed still, not recommend if stop is used
+    bool isElapsed() override;
+    void setDelay_ms(unsigned long delay_ms) override;
+    unsigned long getDelay_ms() const override;
+    void setRemaining_ms(unsigned long remaining) override;
+    unsigned long getRemaining_ms() const override;
+    void stop() override; // stop timer, causing all isElapsed checks to return false and getRemaining_ms to return 0;
 };
 
 class TimerDefault : public TimerWithSource
 {
 public:
-    TimerDefault(const unsigned long delay_ms) : TimerWithSource(delay_ms, *globalTimerSource){};
+    explicit TimerDefault(const unsigned long delay_ms) : TimerWithSource(delay_ms, *globalTimerSource){};
 };
 
 // Example DefaultTimerSource for Arduino
