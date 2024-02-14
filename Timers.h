@@ -69,8 +69,8 @@ public:
   void Set(unsigned long delay);
   void Adjust(unsigned long remaining);
   bool Check() const override;
-  unsigned long SetPoint() const override;
-  unsigned long Remaining() const;
+  uint32_t SetPoint() const override;
+  uint32_t Remaining() const;
 };
 
 // untested
