@@ -5,7 +5,7 @@
 class DummyTimeSource : public TimerSource // Wrapper object around a system time source for creating system independent timers
 {
 public:
-    DummyTimeSource(){};
+    DummyTimeSource() = default;
     long time = 0;
     unsigned long getSystemTime() const { return time; };
 };
