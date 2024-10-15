@@ -8,7 +8,8 @@ void TimerBase::Reset()
 void TimerBase::Next()
 {
     this->start = this->start + this->SetPoint();
-    if (this->Check()){
+    if (this->Check())
+    {
         this->Reset();
     }
 }
@@ -57,12 +58,12 @@ bool LongTimer::Check() const
     return (millis() - this->start >= this->delay);
 }
 
-unsigned long LongTimer::SetPoint() const
+uint32_t LongTimer::SetPoint() const
 {
     return delay;
 }
 
-unsigned long LongTimer::Remaining() const
+uint32_t LongTimer::Remaining() const
 {
     if (this->Check())
     {
